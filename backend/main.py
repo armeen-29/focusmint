@@ -2,7 +2,7 @@
 #  FocusMint AI Chatbot Backend
 #  Run: uvicorn main:app --reload --port 8000
 # ============================================================
-
+import httpx 
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -151,6 +151,34 @@ async def clear_session(session_id: str):
     sessions.pop(session_id, None)
     return {"status": "cleared"}
 
+# ============================================================
+#  GET /weather?city=Chennai  — proxy endpoint
+#  Key stays on server, never exposed to browser
+# ============================================================
+
+@app.get("/weather")
+async def get_weather(city: str = None, lat: float = None, lon: float = None):
+    weather_key = os.getenv("WEATHER_API_KEY")
+    if not weather_key:
+        raise HTTPException(status_code=500, detail="Weather API key not configured")
+
+    # Build the OpenWeatherMap URL based on what was passed
+    if city:
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={weather_key}"
+    elif lat and lon:
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={weather_key}"
+    else:
+        raise HTTPException(status_code=400, detail="Provide city or lat/lon")
+
+    # Fetch from OpenWeatherMap on the server side
+    async with httpx.AsyncClient() as client:
+        res  = await client.get(url)
+        data = res.json()
+
+    if data.get("cod") != 200:
+        raise HTTPException(status_code=404, detail="City not found")
+
+    return data
 # ============================================================
 #  GET /health — check server is alive
 # ============================================================
