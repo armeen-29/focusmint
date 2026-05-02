@@ -1329,7 +1329,7 @@
   const API_URL =
     window.location.hostname === "localhost"
       ? "http://localhost:8000"
-      : "https://focusmint-backend.onrender.com"; // ← Render URL
+      : "https://focusmint.onrender.com"; // ← Render URL
 
   // Unique session ID for this browser tab (new conversation per reload)
   const SESSION_ID = "fm_" + Math.random().toString(36).slice(2);
