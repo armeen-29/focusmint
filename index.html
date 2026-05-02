@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FocusMint – Productivity Hub</title>
+    <style>
+      .logo {
+        width: 150px; /* Adjust size as needed */
+        height: auto;
+      }
+    </style>
+    <link rel="icon" href="logo.png" type="image/png" />
+    <!-- Fonts: Cormorant Garamond (display) + DM Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- ============================================================
+       NAVBAR
+       ============================================================ -->
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <img src="logo.png" alt="FM" onerror="this.style.display = 'none'" />
+        FocusMint
+        <span class="navbar-tagline">refresh your focus</span>
+      </div>
+
+      <!-- All tabs — scroll horizontally on mobile -->
+      <div class="nav-tabs" id="nav-tabs">
+        <button class="nav-tab active" data-section="home">Home</button>
+        <button class="nav-tab" data-section="clock">Clock</button>
+        <button class="nav-tab" data-section="pomodoro">Pomodoro</button>
+        <button class="nav-tab" data-section="todo">To-Do</button>
+        <button class="nav-tab" data-section="notes">Notes</button>
+        <button class="nav-tab" data-section="calendar">Calendar</button>
+        <button class="nav-tab" data-section="water">Water</button>
+        <button class="nav-tab" data-section="calc">Calculator</button>
+        <button class="nav-tab" data-section="habits">Habits</button>
+        <button class="nav-tab" data-section="chat">
+          <i class="fas fa-robot"></i> Minty AI
+        </button>
+      </div>
+
+      <!-- Light / Dark toggle -->
+      <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+        <i class="fas fa-moon" id="theme-icon"></i>
+      </button>
+    </nav>
+
+    <!-- ============================================================
+       MAIN
+      ============================================================ -->
+    <main class="main">
+      <!-- ── HOME ──────────────────────────────────────────────── -->
+      <section class="section active" id="sec-home">
+        <div class="hero">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              flex-wrap: wrap;
+              gap: 1.5rem;
+            "
+          >
+            <div style="flex: 1">
+              <h1>Welcome to FocusMint</h1>
+              <div class="hero-sub">
+                — Refresh your focus, master your time —
+              </div>
+              <p>
+                Your all-in-one productivity toolkit: clock, Pomodoro timer,
+                to-do list, journal notes, water and habit tracker, qoute
+                section and an event-ready calendar — all in one space.
+              </p>
+            </div>
+
+            <!-- Live Weather Widget inside Hero -->
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                /* border-radius: var(--radius-lg); */
+                border-radius: 12px;
+                padding: 1rem 1.5rem;
+                min-width: 20%;
+                text-align: center;
+              "
+            >
+              <div
+                style="
+                  font-size: 0.7rem;
+                  text-transform: uppercase;
+                  letter-spacing: 2px;
+                  opacity: 0.8;
+                "
+              >
+                Live Weather
+              </div>
+              <div
+                id="hero-weather-icon"
+                style="font-size: 2rem; margin: 0.5rem 0"
+              >
+                <i class="fas fa-cloud-sun"></i>
+              </div>
+              <div
+                id="hero-weather-temp"
+                style="font-size: 2rem; font-weight: 300; line-height: 1"
+              >
+                --°C
+              </div>
+              <div
+                id="hero-weather-city"
+                style="font-size: 0.8rem; opacity: 0.9"
+              >
+                Detecting location...
+              </div>
+              <div
+                id="hero-weather-desc"
+                style="font-size: 0.7rem; opacity: 0.7; margin-top: 0.25rem"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-grid">
+          <div class="feature-tile" data-target="clock">
+            <div class="tile-icon"><i class="fas fa-clock"></i></div>
+            <div>
+              <h3>Digital Clock</h3>
+              <p>Elegant live clock with 12/24-hour toggle.</p>
+            </div>
+          </div>
+          <div class="feature-tile" data-target="pomodoro">
+            <div class="tile-icon"><i class="fas fa-hourglass-half"></i></div>
+            <div>
+              <h3>Pomodoro Timer</h3>
+              <p>Focused sprints with animated ring progress.</p>
+            </div>
+          </div>
+          <div class="feature-tile" data-target="todo">
+            <div class="tile-icon"><i class="fas fa-check-circle"></i></div>
+            <div>
+              <h3>To-Do List</h3>
+              <p>Tasks with filters and a live progress bar.</p>
+            </div>
+          </div>
+          <div class="feature-tile" data-target="notes">
+            <div class="tile-icon"><i class="fas fa-feather-alt"></i></div>
+            <div>
+              <h3>Journal Notes</h3>
+              <p>Quick notes, auto-saved, export as .txt.</p>
+            </div>
+          </div>
+          <div class="feature-tile" data-target="calendar">
+            <div class="tile-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div>
+              <h3>Calendar</h3>
+              <p>Month & week views with personal events.</p>
+            </div>
+          </div>
+          <div class="feature-tile" data-target="water">
+            <div class="tile-icon"><i class="fas fa-tint"></i></div>
+            <div>
+              <h3>Water Tracker</h3>
+              <p>Daily hydration goal with intake log.</p>
+            </div>
+          </div>
+          <div class="feature-tile" data-target="calc">
+            <div class="tile-icon"><i class="fas fa-calculator"></i></div>
+            <div>
+              <h3>Calculator</h3>
+              <p>Smooth, full-featured scientific calculator.</p>
+            </div>
+          </div>
+          <div class="feature-tile" data-target="habits">
+            <div class="tile-icon"><i class="fas fa-fire"></i></div>
+            <div>
+              <h3>Habit Tracker</h3>
+              <p>Build streaks, track daily habits.</p>
+            </div>
+          </div>
+          <div class="feature-tile" data-target="chat">
+            <div class="tile-icon"><i class="fas fa-robot"></i></div>
+            <div>
+              <h3>Minty — AI Assistant</h3>
+              <p>Real-time AI support with active memory.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CLOCK ──────────────────────────────────────────────── -->
+      <section class="section" id="sec-clock">
+        <h2 class="section-title">
+          <i class="fas fa-clock"></i> Digital Clock
+        </h2>
+        <div class="card">
+          <div class="clock-wrap">
+            <div class="clock-date-str" id="clock-date"></div>
+            <div class="clock-time-str" id="clock-time">00:00:00</div>
+            <div class="clock-btns">
+              <button class="btn btn-ghost" id="clock-fmt-btn">
+                Switch to 24-Hour
+              </button>
+              <button class="btn btn-ghost" id="clock-sec-btn">
+                Hide Seconds
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── POMODORO ────────────────────────────────────────────── -->
+      <section class="section" id="sec-pomodoro">
+        <h2 class="section-title">
+          <i class="fas fa-hourglass-half"></i> Pomodoro Timer
+        </h2>
+        <div class="pomo-layout">
+          <div class="card timer-card">
+            <div class="timer-mode-lbl" id="pomo-mode-lbl">WORK SESSION</div>
+            <div class="ring-wrap">
+              <svg viewBox="0 0 178 178" width="178" height="178">
+                <circle class="ring-bg" cx="89" cy="89" r="84" />
+                <circle
+                  class="ring-fill"
+                  id="ring-fill"
+                  cx="89"
+                  cy="89"
+                  r="84"
+                />
+              </svg>
+              <div class="ring-time" id="pomo-time">25:00</div>
+            </div>
+            <div class="pomo-dots" id="pomo-dots"></div>
+            <div class="timer-btns">
+              <button class="btn btn-primary" id="pomo-start">
+                <i class="fas fa-play"></i> Start
+              </button>
+              <button class="btn btn-ghost" id="pomo-pause" disabled>
+                <i class="fas fa-pause"></i> Pause
+              </button>
+              <button class="btn btn-ghost" id="pomo-reset">
+                <i class="fas fa-redo"></i> Reset
+              </button>
+              <button class="btn btn-ghost" id="pomo-skip">
+                <i class="fas fa-forward"></i> Skip
+              </button>
+            </div>
+          </div>
+          <div class="card settings-card">
+            <h3>Timer Settings</h3>
+            <div class="setting-row">
+              <label>Work (min)</label
+              ><input
+                type="number"
+                id="pomo-work"
+                min="1"
+                max="60"
+                value="25"
+              />
+            </div>
+            <div class="setting-row">
+              <label>Short break (min)</label
+              ><input
+                type="number"
+                id="pomo-break"
+                min="1"
+                max="30"
+                value="5"
+              />
+            </div>
+            <div class="setting-row">
+              <label>Long break (min)</label
+              ><input
+                type="number"
+                id="pomo-long"
+                min="1"
+                max="60"
+                value="15"
+              />
+            </div>
+            <div class="setting-row">
+              <label>Sessions before long break</label
+              ><input
+                type="number"
+                id="pomo-rounds"
+                min="1"
+                max="10"
+                value="4"
+              />
+            </div>
+            <button
+              class="btn btn-primary btn-sm"
+              id="pomo-save"
+              style="margin-top: 0.5rem"
+            >
+              <i class="fas fa-save"></i> Save & Reset
+            </button>
+            <p
+              style="
+                font-size: 0.72rem;
+                color: var(--text-muted);
+                margin-top: 1.2rem;
+                line-height: 1.55;
+              "
+            >
+              Work in focused sprints, rest, repeat. After completing all
+              sessions you earn a long break.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── TO-DO ───────────────────────────────────────────────── -->
+      <section class="section" id="sec-todo">
+        <h2 class="section-title">
+          <i class="fas fa-check-circle"></i> To-Do List
+        </h2>
+        <div class="card">
+          <div class="todo-add-row">
+            <input
+              type="text"
+              id="todo-input"
+              placeholder="Add a task and press Enter…"
+            />
+            <button class="btn btn-primary" id="todo-add">
+              <i class="fas fa-plus"></i> Add
+            </button>
+          </div>
+          <div class="progress-row">
+            <div class="progress-track">
+              <div class="progress-bar" id="todo-bar"></div>
+            </div>
+            <span class="progress-lbl" id="todo-lbl">0 / 0</span>
+          </div>
+          <div class="todo-filters">
+            <button class="filter-chip active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="active">Active</button>
+            <button class="filter-chip" data-filter="done">Completed</button>
+          </div>
+          <div class="task-list" id="todo-list"></div>
+        </div>
+      </section>
+
+      <!-- ── NOTES ──────────────────────────────────────────────── -->
+      <section class="section" id="sec-notes">
+        <h2 class="section-title">
+          <i class="fas fa-feather-alt"></i> Journal Notes
+        </h2>
+        <div class="notes-toolbar">
+          <span style="font-size: 0.8rem; color: var(--text-muted)"
+            >Saved automatically in your browser.</span
+          >
+          <div style="display: flex; gap: 0.55rem">
+            <button class="btn btn-primary" id="notes-new">
+              <i class="fas fa-plus"></i> New Note
+            </button>
+            <button class="btn btn-ghost" id="notes-export">
+              <i class="fas fa-download"></i> Export All
+            </button>
+          </div>
+        </div>
+        <div class="notes-grid" id="notes-grid"></div>
+      </section>
+
+      <!-- ── CALENDAR ───────────────────────────────────────────── -->
+      <section class="section" id="sec-calendar">
+        <h2 class="section-title">
+          <i class="fas fa-calendar-alt"></i> Calendar
+        </h2>
+        <div class="cal-layout">
+          <div>
+            <div class="card">
+              <div class="cal-header">
+                <button class="cal-nav-btn" id="cal-prev">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3 id="cal-label">Month Year</h3>
+                <button class="cal-nav-btn" id="cal-next">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="cal-view-toggle">
+                <button class="view-chip active" data-view="month">
+                  Month
+                </button>
+                <button class="view-chip" data-view="week">Week</button>
+              </div>
+              <div class="cal-weekdays" id="cal-weekdays">
+                <div class="cal-weekday">Su</div>
+                <div class="cal-weekday">Mo</div>
+                <div class="cal-weekday">Tu</div>
+                <div class="cal-weekday">We</div>
+                <div class="cal-weekday">Th</div>
+                <div class="cal-weekday">Fr</div>
+                <div class="cal-weekday">Sa</div>
+              </div>
+              <div id="cal-grid"></div>
+            </div>
+          </div>
+          <div class="card events-panel">
+            <h4>
+              <i
+                class="fas fa-calendar-day"
+                style="color: var(--accent); margin-right: 0.35rem"
+              ></i
+              >Events
+            </h4>
+            <div class="sel-date-lbl" id="cal-sel-lbl">
+              Click a day to add or view events.
+            </div>
+            <div class="event-add-form" id="event-form" style="display: none">
+              <input
+                type="text"
+                id="event-title"
+                placeholder="Event title…"
+                maxlength="60"
+              />
+              <textarea
+                id="event-note"
+                placeholder="Notes (optional)…"
+                maxlength="200"
+              ></textarea>
+              <button class="btn btn-primary btn-sm" id="event-save">
+                <i class="fas fa-plus"></i> Add Event
+              </button>
+            </div>
+            <div class="event-list" id="event-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── WEATHER ────────────────────────────────────────────── -->
+      <section class="section" id="sec-weather">
+        <h2 class="section-title">
+          <i class="fas fa-cloud-sun"></i> Weather Widget
+        </h2>
+        <div class="card weather-card">
+          <div class="weather-search-row">
+            <input type="text" id="wx-input" placeholder="Enter city name…" />
+            <button class="btn btn-primary" id="wx-btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div id="wx-display">
+            <div class="weather-placeholder">
+              Search a city to see current weather.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── WATER TRACKER ──────────────────────────────────────── -->
+      <section class="section" id="sec-water">
+        <h2 class="section-title">
+          <i class="fas fa-tint"></i> Water Intake Tracker
+        </h2>
+        <div class="water-layout">
+          <!-- Left card: ring + cups -->
+          <div class="card water-main-card">
+            <!-- Goal setting -->
+            <div class="water-goal-row">
+              <label>Daily goal:</label>
+              <input
+                type="number"
+                id="water-goal-input"
+                min="500"
+                max="5000"
+                step="100"
+                value="2000"
+              />
+              <span style="font-size: 0.78rem; color: var(--text-mid)">ml</span>
+              <button class="btn btn-ghost btn-sm" id="water-goal-set">
+                Set
+              </button>
+            </div>
+
+            <!-- Circular progress ring -->
+            <div class="water-ring-wrap">
+              <svg viewBox="0 0 160 160" width="160" height="160">
+                <circle class="water-ring-bg" cx="80" cy="80" r="70" />
+                <circle
+                  class="water-ring-fill"
+                  id="water-ring"
+                  cx="80"
+                  cy="80"
+                  r="70"
+                />
+              </svg>
+              <div class="water-ring-label">
+                <span class="water-ring-ml" id="water-total">0</span>
+                <span class="water-ring-sub" id="water-ring-sub"
+                  >of 2000 ml</span
+                >
+              </div>
+            </div>
+
+            <!-- 8 quick-add cup buttons (250 ml each) -->
+            <div class="cups-grid" id="cups-grid">
+              <!-- Rendered by JS -->
+            </div>
+
+            <p
+              style="
+                font-size: 0.72rem;
+                color: var(--text-muted);
+                margin-bottom: 0.75rem;
+              "
+            >
+              Tap a cup to add 250 ml. Tap again to undo.
+            </p>
+
+            <div class="water-reset-row">
+              <button class="btn btn-ghost btn-sm" id="water-reset">
+                <i class="fas fa-redo"></i> Reset Day
+              </button>
+            </div>
+          </div>
+
+          <!-- Right card: custom add + log -->
+          <div class="card water-log-card">
+            <h4>
+              <i
+                class="fas fa-list"
+                style="color: var(--accent); margin-right: 0.35rem"
+              ></i
+              >Intake Log
+            </h4>
+            <div class="water-custom-row">
+              <input
+                type="number"
+                id="water-custom-ml"
+                placeholder="Custom ml…"
+                min="1"
+                max="2000"
+              />
+              <button class="btn btn-primary btn-sm" id="water-custom-add">
+                <i class="fas fa-plus"></i> Add
+              </button>
+            </div>
+            <div class="water-log" id="water-log"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CALCULATOR ─────────────────────────────────────────── -->
+      <section class="section" id="sec-calc">
+        <h2 class="section-title">
+          <i class="fas fa-calculator"></i> Calculator
+        </h2>
+        <div class="card">
+          <div class="calc-wrap">
+            <!-- Screen: shows expression on top, result below -->
+            <div class="calc-screen">
+              <div class="calc-expr" id="calc-expr"></div>
+              <div class="calc-result" id="calc-result">0</div>
+            </div>
+            <!-- Button grid: 4 columns -->
+            <div class="calc-grid">
+              <!-- Row 1: clear, backspace, %, ÷ -->
+              <button class="calc-btn clear" data-action="clear">C</button>
+              <button class="calc-btn op" data-action="backspace">
+                <i class="fas fa-backspace"></i>
+              </button>
+              <button class="calc-btn op" data-action="percent">%</button>
+              <button class="calc-btn op" data-action="op" data-val="/">
+                ÷
+              </button>
+              <!-- Row 2: 7 8 9 × -->
+              <button class="calc-btn" data-action="digit" data-val="7">
+                7
+              </button>
+              <button class="calc-btn" data-action="digit" data-val="8">
+                8
+              </button>
+              <button class="calc-btn" data-action="digit" data-val="9">
+                9
+              </button>
+              <button class="calc-btn op" data-action="op" data-val="*">
+                ×
+              </button>
+              <!-- Row 3: 4 5 6 − -->
+              <button class="calc-btn" data-action="digit" data-val="4">
+                4
+              </button>
+              <button class="calc-btn" data-action="digit" data-val="5">
+                5
+              </button>
+              <button class="calc-btn" data-action="digit" data-val="6">
+                6
+              </button>
+              <button class="calc-btn op" data-action="op" data-val="-">
+                −
+              </button>
+              <!-- Row 4: 1 2 3 + -->
+              <button class="calc-btn" data-action="digit" data-val="1">
+                1
+              </button>
+              <button class="calc-btn" data-action="digit" data-val="2">
+                2
+              </button>
+              <button class="calc-btn" data-action="digit" data-val="3">
+                3
+              </button>
+              <button class="calc-btn op" data-action="op" data-val="+">
+                +
+              </button>
+              <!-- Row 5: ± 0 . = -->
+              <button class="calc-btn op" data-action="negate">±</button>
+              <button class="calc-btn" data-action="digit" data-val="0">
+                0
+              </button>
+              <button class="calc-btn" data-action="dot">.</button>
+              <button class="calc-btn eq" data-action="equals">=</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── HABIT TRACKER ──────────────────────────────────────── -->
+      <section class="section" id="sec-habits">
+        <h2 class="section-title"><i class="fas fa-fire"></i> Habit Tracker</h2>
+        <div class="card">
+          <p class="habit-info-row">
+            Add daily habits and check them off each day. Dots show your last 7
+            days — tap the check to mark today done.
+          </p>
+
+          <!-- Add row -->
+          <div class="habit-add-row">
+            <input
+              type="text"
+              id="habit-input"
+              placeholder="Add a habit (e.g. Read 10 pages, Walk 20 min)…"
+              maxlength="60"
+            />
+            <button class="btn btn-primary" id="habit-add">
+              <i class="fas fa-plus"></i> Add
+            </button>
+          </div>
+
+          <!-- List -->
+          <div class="habit-list" id="habit-list"></div>
+        </div>
+      </section>
+      <!-- ══════════════════════════════════════════════════════════
+         AI ASSISTANT
+     ══════════════════════════════════════════════════════════ -->
+      <section class="section" id="sec-chat">
+        <h2 class="section-title">
+          <i class="fas fa-robot"></i> Minty — Your AI Assistant
+        </h2>
+
+        <div class="chat-layout">
+          <!-- ── Left: chat window ── -->
+          <div class="card chat-window" style="padding: 0">
+            <!-- Message list -->
+            <div class="chat-messages" id="chat-messages">
+              <!-- Welcome message injected by JS on load -->
+            </div>
+
+            <!-- Typing indicator (hidden by default) -->
+            <div
+              id="chat-typing"
+              style="display: none; padding: 0.5rem 1.25rem"
+            >
+              <div class="chat-msg bot">
+                <div class="chat-avatar"><i class="fas fa-leaf"></i></div>
+                <div class="chat-bubble" style="padding: 0.5rem 0.85rem">
+                  <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Input bar -->
+            <div class="chat-input-bar">
+              <textarea
+                id="chat-input"
+                placeholder="Ask Minty anything about productivity…"
+                rows="1"
+              ></textarea>
+              <button class="chat-send-btn" id="chat-send" title="Send">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Right: sidebar ── -->
+          <div class="chat-sidebar">
+            <div class="card" style="margin-bottom: 1rem">
+              <h4>
+                <i
+                  class="fas fa-leaf"
+                  style="color: var(--accent); margin-right: 0.35rem"
+                ></i
+                >Minty AI
+              </h4>
+              <div class="chat-status">
+                <div class="status-dot" id="status-dot"></div>
+                <span id="status-text">Connecting…</span>
+              </div>
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--text-muted);
+                  line-height: 1.6;
+                "
+              >
+                Ready to help you stay productive. Your session is saved while
+                we chat.
+              </p>
+            </div>
+
+            <div class="card">
+              <h4>Try asking…</h4>
+              <div class="suggestion-chips" id="suggestion-chips">
+                <button class="suggestion-chip">
+                  💡 Give me a Pomodoro plan for studying today
+                </button>
+                <button class="suggestion-chip">
+                  🌿 How do I stay focused when I keep getting distracted?
+                </button>
+                <button class="suggestion-chip">
+                  📋 Help me prioritise my tasks for the week
+                </button>
+                <button class="suggestion-chip">
+                  💧 Why is drinking water important for focus?
+                </button>
+
+                <button class="suggestion-chip">
+                  🧘 Give me a 2-minute mindfulness tip
+                </button>
+              </div>
+
+              <button class="chat-clear-btn" id="chat-clear">
+                <i class="fas fa-trash-alt"></i> Clear conversation
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+    <footer>
+      © 2026 FocusMint – Productivity Hub &nbsp;|&nbsp; Crafted by Armeen
+      &nbsp;<i class="fas fa-heart"></i>&nbsp; All rights reserved
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
