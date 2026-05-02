@@ -3,7 +3,7 @@
 ============================================================ */
 
 /* ============================================================
-       NAVIGATION — tab switching + home tile clicks
+       NAVIGATION — tab switching + home tile clicks 
     ============================================================ */
 (function () {
   const tabs = document.querySelectorAll(".nav-tab");
@@ -28,6 +28,36 @@
     .forEach((tile) =>
       tile.addEventListener("click", () => show(tile.dataset.target)),
     );
+})();
+
+/* ---- BACK BUTTON HANDLING ---- */
+
+(function () {
+  // Push an extra state so we intercept the first back press
+  history.pushState({ page: "app" }, "", window.location.pathname);
+
+  window.addEventListener("popstate", function (e) {
+    const homeSection = document.getElementById("sec-home");
+    const isHomeActive = homeSection.classList.contains("active");
+
+    if (!isHomeActive) {
+      // Not on home → navigate to home instead of closing
+      document
+        .querySelectorAll(".section")
+        .forEach((s) => s.classList.remove("active"));
+      document
+        .querySelectorAll(".nav-tab")
+        .forEach((t) => t.classList.remove("active"));
+      homeSection.classList.add("active");
+      document
+        .querySelector('.nav-tab[data-section="home"]')
+        .classList.add("active");
+
+      // Push state again so next back press can exit
+      history.pushState({ page: "app" }, "", window.location.pathname);
+    }
+    // If already on home → browser handles it naturally (exit/close)
+  });
 })();
 
 /* ============================================================
