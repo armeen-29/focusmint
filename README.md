@@ -36,7 +36,7 @@ focusmint/
 └── backend/
     ├── main.py         # FastAPI app + LangGraph chatbot
     ├── requirements.txt
-    ├── .env            # Your secrets (gitignored — never commit this)
+    ├── .env            # (gitignored)
     └── .env.example    # Template showing required env vars
 ```
 
