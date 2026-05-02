@@ -687,20 +687,22 @@
        WEATHER WIDGET - in Hero  section
     ============================================================ */
 
+/* ============================================================
+   WEATHER WIDGET
+   All API calls go to our FastAPI backend (/weather)
+   The real OpenWeather key lives in backend .env — never here
+============================================================ */
 (function () {
-  // DOM elements for main weather page
   const cityInput = document.getElementById("weather-city-input");
   const searchBtn = document.getElementById("weather-search-btn");
   const displayEl = document.getElementById("weather-display");
-
-  // DOM elements for hero weather widget
   const heroTemp = document.getElementById("hero-weather-temp");
   const heroCity = document.getElementById("hero-weather-city");
   const heroDesc = document.getElementById("hero-weather-desc");
   const heroIcon = document.getElementById("hero-weather-icon");
 
-  const API_KEY = "9172775c5530c345dea005d3a93c6a52";
-  const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+  // ── Point to YOUR backend, not OpenWeatherMap directly ──
+  const BACKEND = "http://localhost:8000";
 
   const iconMap = {
     "01d": "fa-sun",
@@ -723,71 +725,47 @@
     "50n": "fa-smog",
   };
 
-  // Fetch weather by coordinates (auto location)
-  async function fetchWeatherByCoords(lat, lon) {
+  // ── Fetch from backend by city name ──
+  async function fetchByCity(city) {
     try {
       const res = await fetch(
-        `${BASE_URL}?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`,
+        `${BACKEND}/weather?city=${encodeURIComponent(city)}`,
       );
-      const data = await res.json();
-      if (data.cod === 200) {
-        updateHeroWeather(data);
-        return data;
-      }
+      if (!res.ok) throw new Error("City not found");
+      return await res.json();
     } catch (err) {
-      console.error("Weather fetch failed:", err);
-    }
-    return null;
-  }
-
-  // Fetch weather by city name (manual search)
-  async function fetchWeatherByCity(city) {
-    try {
-      const res = await fetch(
-        `${BASE_URL}?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`,
-      );
-      const data = await res.json();
-      if (data.cod === 200) {
-        updateHeroWeather(data);
-        return data;
-      } else {
-        if (displayEl) {
-          displayEl.innerHTML =
-            '<div class="weather-placeholder">City not found. Please try again.</div>';
-        }
-        return null;
-      }
-    } catch (err) {
-      if (displayEl) {
-        displayEl.innerHTML =
-          '<div class="weather-placeholder">Failed to load weather.</div>';
-      }
+      showError(err.message);
       return null;
     }
   }
 
-  // Update hero widget with weather data
-  function updateHeroWeather(data) {
+  // ── Fetch from backend by coordinates ──
+  async function fetchByCoords(lat, lon) {
+    try {
+      const res = await fetch(`${BACKEND}/weather?lat=${lat}&lon=${lon}`);
+      if (!res.ok) throw new Error("Location fetch failed");
+      return await res.json();
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
+  // ── Update the hero banner widget ──
+  function updateHero(data) {
     if (!data) return;
-
     const icon = iconMap[data.weather[0].icon] || "fa-cloud";
-    const temp = Math.round(data.main.temp);
-    const city = data.name;
-    const desc = data.weather[0].description;
-
-    if (heroTemp) heroTemp.textContent = `${temp}°C`;
-    if (heroCity) heroCity.textContent = city;
-    if (heroDesc) heroDesc.textContent = desc;
+    if (heroTemp) heroTemp.textContent = Math.round(data.main.temp) + "°C";
+    if (heroCity) heroCity.textContent = data.name;
+    if (heroDesc) heroDesc.textContent = data.weather[0].description;
     if (heroIcon) heroIcon.innerHTML = `<i class="fas ${icon}"></i>`;
   }
 
-  // Update main weather page (if it exists)
-  function updateMainWeatherPage(data) {
+  // ── Update the full weather section page ──
+  function updateDisplay(data) {
     if (!displayEl || !data) return;
-
     const icon = iconMap[data.weather[0].icon] || "fa-cloud";
     const wind = Math.round(data.wind.speed * 3.6);
-
     displayEl.innerHTML = `
       <div class="weather-icon-big"><i class="fas ${icon}"></i></div>
       <div class="weather-city-name">${data.name}, ${data.sys.country}</div>
@@ -806,59 +784,60 @@
           <i class="fas fa-thermometer-half"></i>
           <span>Feels ${Math.round(data.main.feels_like)}°C</span>
         </div>
-      </div>
-    `;
+      </div>`;
   }
 
-  // Get user's location and fetch weather
-  function getLocationAndWeather() {
-    if (heroCity) heroCity.textContent = "Detecting...";
+  function showError(msg) {
+    if (displayEl)
+      displayEl.innerHTML = `<div class="weather-placeholder">${msg}</div>`;
+    if (heroCity) heroCity.textContent = "Unavailable";
+  }
 
+  // ── Auto-detect location on load ──
+  function autoDetect() {
+    if (heroCity) heroCity.textContent = "Detecting...";
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const data = await fetchWeatherByCoords(
-            position.coords.latitude,
-            position.coords.longitude,
+        async (pos) => {
+          const data = await fetchByCoords(
+            pos.coords.latitude,
+            pos.coords.longitude,
           );
-          if (data && displayEl) updateMainWeatherPage(data);
+          updateHero(data);
+          updateDisplay(data);
         },
-        (error) => {
-          console.warn("Geolocation error:", error);
-          if (heroCity) heroCity.textContent = "Location denied";
-          // Fallback to default city
-          fetchWeatherByCity("New Delhi");
+        () => {
+          // User denied location — fall back to default
+          fetchByCity("New Delhi").then((data) => {
+            updateHero(data);
+            updateDisplay(data);
+          });
         },
       );
     } else {
-      if (heroCity) heroCity.textContent = "Geo not supported";
-      fetchWeatherByCity("New Delhi");
+      fetchByCity("New Delhi").then((data) => {
+        updateHero(data);
+        updateDisplay(data);
+      });
     }
   }
 
-  // Manual search handler
-  if (searchBtn && cityInput) {
-    searchBtn.addEventListener("click", async () => {
-      const city = cityInput.value.trim();
-      if (city) {
-        const data = await fetchWeatherByCity(city);
-        if (data) updateMainWeatherPage(data);
-      }
-    });
-
-    cityInput.addEventListener("keydown", async (e) => {
-      if (e.key === "Enter") {
-        const city = cityInput.value.trim();
-        if (city) {
-          const data = await fetchWeatherByCity(city);
-          if (data) updateMainWeatherPage(data);
-        }
-      }
-    });
+  // ── Manual search ──
+  async function handleSearch() {
+    const city = cityInput?.value.trim();
+    if (!city) return;
+    const data = await fetchByCity(city);
+    updateHero(data);
+    updateDisplay(data);
   }
 
-  // Auto-load weather on page start
-  getLocationAndWeather();
+  if (searchBtn) searchBtn.addEventListener("click", handleSearch);
+  if (cityInput)
+    cityInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleSearch();
+    });
+
+  autoDetect();
 })();
 
 /* ============================================================
