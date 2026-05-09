@@ -1366,23 +1366,32 @@
 
   // ── Check if backend is alive ──────────────────────────────
   async function checkHealth() {
-    try {
-      const r = await fetch(API_URL + "/health", {
-        signal: AbortSignal.timeout(3000),
-      });
-      if (r.ok) {
-        statusDot.classList.add("online");
-        statusText.textContent = "Online · GPT-4o-mini";
-      } else {
-        throw new Error();
+    statusDot.classList.remove("online");
+    statusText.textContent = "Waking up… please wait ☕";
+
+    // Try up to 8 times (every 8 seconds = ~1 minute total)
+    for (let attempt = 1; attempt <= 8; attempt++) {
+      try {
+        const r = await fetch(API_URL + "/health", {
+          signal: AbortSignal.timeout(6000),
+        });
+        if (r.ok) {
+          statusDot.classList.add("online");
+          statusText.textContent = "Online · GPT-4o-mini";
+          return; // connected — stop retrying
+        }
+      } catch {
+        // Not ready yet — update message with attempt count
+        statusText.textContent = `Server waking up… (${attempt}/8) this may take ~50s ☕`;
       }
-    } catch {
-      statusDot.classList.remove("online");
-      statusText.textContent = "Backend offline";
-      appendError(
-        "⚠️ Cannot reach the backend. Make sure you ran: uvicorn main:app --reload",
-      );
+      // Wait 8 seconds before next attempt
+      await new Promise((res) => setTimeout(res, 8000));
     }
+
+    // All 8 attempts failed
+    statusDot.classList.remove("online");
+    statusText.textContent =
+      "Taking longer than usual — try sending a message anyway";
   }
 
   // Simple markdown renderer — handles what Minty actually outputs
